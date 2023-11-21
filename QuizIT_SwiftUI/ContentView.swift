@@ -74,8 +74,18 @@ struct ContentView: View {
                     }
                     .padding(.vertical)
                 }
+                NavigationLink(destination: QuizDetailView()) {
+                    HStack {
+                        Image(systemName: "person.crop.circle.badge.questionmark")
+                            .imageScale(.large)
+                            .foregroundColor(getTextColor(color: colorScheme))
+                        Text("Quiz starten")
+                            .foregroundStyle(getTextColor(color: colorScheme))
+                            .font(.title2)
+                    }
+                    .padding(.vertical)
+                }
                 Spacer()
-                
             }
         }
     }
