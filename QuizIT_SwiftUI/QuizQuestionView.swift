@@ -32,7 +32,7 @@ struct QuizQuestionView: View {
                 Image(systemName: "checkmark.seal")
                     .imageScale(.large)
                     .padding(5)
-                    .foregroundColor(getAnswerTextColor(color: colorScheme))
+                    .foregroundColor(getTextColor(color: colorScheme, questionIndex: 1))
                 Button(question.question_answer1 ?? "") {
                     if answer1Active == false {
                         answer1Active = true
@@ -41,7 +41,7 @@ struct QuizQuestionView: View {
                         answer1Active = false
                     }
                 }
-                    .foregroundColor(getAnswerTextColor(color: colorScheme))
+                .foregroundColor(getTextColor(color: colorScheme, questionIndex: 1))
                 Spacer()
             }
             .background(
@@ -58,7 +58,7 @@ struct QuizQuestionView: View {
                 Image(systemName: "checkmark.seal")
                     .imageScale(.large)
                     .padding(5)
-                    .foregroundColor(getAnswerTextColor(color: colorScheme))
+                    .foregroundColor(getTextColor(color: colorScheme, questionIndex: 2))
                 Button(question.question_answer2 ?? "") {
                     if answer2Active == false {
                         answer2Active = true
@@ -67,7 +67,7 @@ struct QuizQuestionView: View {
                         answer2Active = false
                     }
                 }
-                    .foregroundColor(getAnswerTextColor(color: colorScheme))
+                .foregroundColor(getTextColor(color: colorScheme, questionIndex: 2))
                 Spacer()
             }
             .background(
@@ -84,7 +84,7 @@ struct QuizQuestionView: View {
                 Image(systemName: "checkmark.seal")
                     .imageScale(.large)
                     .padding(5)
-                    .foregroundColor(getAnswerTextColor(color: colorScheme))
+                    .foregroundColor(getTextColor(color: colorScheme, questionIndex: 3))
                 Button(question.question_answer3 ?? "") {
                     if answer3Active == false {
                         answer3Active = true
@@ -93,7 +93,7 @@ struct QuizQuestionView: View {
                         answer3Active = false
                     }
                 }
-                    .foregroundColor(getAnswerTextColor(color: colorScheme))
+                .foregroundColor(getTextColor(color: colorScheme, questionIndex: 3))
                 Spacer()
             }
             .background(
@@ -110,9 +110,16 @@ struct QuizQuestionView: View {
                 Image(systemName: "checkmark.seal")
                     .imageScale(.large)
                     .padding(5)
-                    .foregroundColor(getAnswerTextColor(color: colorScheme))
-                Text(question.question_answer4 ?? "")
-                    .foregroundColor(getAnswerTextColor(color: colorScheme))
+                    .foregroundColor(getTextColor(color: colorScheme, questionIndex: 4))
+                Button(question.question_answer4 ?? "") {
+                    if answer4Active == false {
+                        answer4Active = true
+                    }
+                    else {
+                        answer4Active = false
+                    }
+                }
+                .foregroundColor(getTextColor(color: colorScheme, questionIndex: 4))
                 Spacer()
             }
             .background(
@@ -122,8 +129,21 @@ struct QuizQuestionView: View {
             .padding(.horizontal,20)
         }
     }
+    func getTextColor(color: ColorScheme, questionIndex: Int) -> Color{
+        if (questionIndex == 1 && answer1Active == true) && (questionIndex == 2 && answer2Active == true) || (questionIndex == 3 && answer2Active == true) || (questionIndex == 4 && answer4Active == true){
+            return .cyan
+        }
+        else {
+            if color == .dark {
+                return .white
+            }
+            else {
+                return .black
+            }
+        }
+        
+    }
 }
-
 #Preview {
     QuizQuestionView(question: Question(question_text: "Wer war der Führer Deutschlands während des Zweiten Weltkriegs?", question_answer1: "Winston Churchill", question_answer2: "Josef Stalin", question_answer3: "Adolf Hitler", question_answer4: "Benito Mussolini", question_correctAnswer1: 0, question_correctAnswer2: 0, question_correctAnswer3: 1, question_correctAnswer4: 0))
 }

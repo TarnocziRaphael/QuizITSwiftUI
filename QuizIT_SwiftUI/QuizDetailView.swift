@@ -37,65 +37,67 @@ struct QuizDetailView: View {
                         .autocorrectionDisabled()
                     
                     Button("Quiz starten") {
-                        quizStarted = true
                         questionCounter += 1
                         let qM = QuestionModel(questionlist: [])
                         qM.loadData(uInput: focus)
                         quizModel.quizQuestionList = qM.questionlist.shuffled()
+                        quizModel.printQuestions()
+                        quizStarted = true
                     }
                     .buttonStyle(.bordered)
-                    Spacer()
                 }
             }
-            else if questionCounter < 5 {
-                let currentQuestion: Question
-                do {
-                    currentQuestion = quizModel.getQuestion(i: questionCounter)
-                }
-                catch {
-                    currentQuestion = Question(question_text: "", question_answer1: "", question_answer2: "", question_answer3: "", question_answer4: "", question_correctAnswer1: "", question_correctAnswer2: "", question_correctAnswer3: "", question_correctAnswer4: "")
-                }
+            else if questionCounter <= 5 && quizStarted == true{
+                let currentQuestion: Question = quizModel.getQuestion(i: questionCounter)
                 VStack {
                     Spacer()
-                    let v = QuizQuestionView(question: currentQuestion)
+                    let questionView = QuizQuestionView(question: currentQuestion)
+                    questionView
                     Spacer()
-                    Button("Nächte Frage") {
+                    Button(getText()) {
                         let pCorrect: Double = getPointsPerCorrectAnswer(question: currentQuestion)
                         let pFalse: Double = getPointsPerWrongAnswer(question: currentQuestion)
                         var points: Double = 0.0
-                        if v.answer1Active == true && currentQuestion.question_correctAnswer1 == 1 {
+                        if questionView.answer1Active == true && currentQuestion.question_correctAnswer1 == 1 {
                             points += pCorrect
                         }
-                        else if (v.answer1Active == true && currentQuestion.question_correctAnswer1 == 0) || (v.answer1Active == false && currentQuestion.question_correctAnswer1 == 1) {
+                        else if (questionView.answer1Active == true && currentQuestion.question_correctAnswer1 == 0) || (questionView.answer1Active == false && currentQuestion.question_correctAnswer1 == 1) {
                             points -= pFalse
                         }
-                        if v.answer2Active == true && currentQuestion.question_correctAnswer2 == 1 {
+                        if questionView.answer2Active == true && currentQuestion.question_correctAnswer2 == 1 {
                             points += pCorrect
                         }
-                        else if (v.answer2Active == true && currentQuestion.question_correctAnswer2 == 0) || (v.answer2Active == false && currentQuestion.question_correctAnswer2 == 1) {
+                        else if (questionView.answer2Active == true && currentQuestion.question_correctAnswer2 == 0) || (questionView.answer2Active == false && currentQuestion.question_correctAnswer2 == 1) {
                             points -= pFalse
                         }
-                        if v.answer3Active == true && currentQuestion.question_correctAnswer3 == 1 {
+                        if questionView.answer3Active == true && currentQuestion.question_correctAnswer3 == 1 {
                             points += pCorrect
                         }
-                        else if (v.answer3Active == true && currentQuestion.question_correctAnswer3 == 0) || (v.answer3Active == false && currentQuestion.question_correctAnswer3 == 1) {
+                        else if (questionView.answer3Active == true && currentQuestion.question_correctAnswer3 == 0) || (questionView.answer3Active == false && currentQuestion.question_correctAnswer3 == 1) {
                             points -= pFalse
                         }
-                        if v.answer4Active == true && currentQuestion.question_correctAnswer4 == 1 {
+                        if questionView.answer4Active == true && currentQuestion.question_correctAnswer4 == 1 {
                             points += pCorrect
                         }
-                        else if (v.answer4Active == true && currentQuestion.question_correctAnswer4 == 0) || (v.answer4Active == false && currentQuestion.question_correctAnswer4 == 1) {
+                        else if (questionView.answer4Active == true && currentQuestion.question_correctAnswer4 == 0) || (questionView.answer4Active == false && currentQuestion.question_correctAnswer4 == 1) {
                             points -= pFalse
+                        }
+                        if points < 0 {
+                            points = 0
                         }
                         quizModel.result += points
                         questionCounter += 1
                     }
+                    .buttonStyle(.bordered)
                 }
+                .padding(.bottom, 10)
             }
             else {
-                VStack {
-                    Text("Erreichte Punkte \(String(quizModel.result))")
-                        .font(.title2)
+                NavigationView {
+                    VStack {
+                        Text("Erreichte Punkte \(String(quizModel.result))")
+                            .font(.title2)
+                    }
                 }
                 
             }
@@ -132,6 +134,14 @@ struct QuizDetailView: View {
             counter += 1.0
         }
         return 1.0/counter;
+    }
+    func getText() -> String {
+        if questionCounter < 5 {
+            return "Nächste Frage"
+        }
+        else {
+            return "Quiz abgeben"
+        }
     }
 }
 
